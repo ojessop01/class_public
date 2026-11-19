@@ -468,6 +468,8 @@ int perturbations_output_data(
           class_store_double(dataptr,tk[ppt->index_tp_delta_g],ppt->has_source_delta_g,storeidx);
           class_store_double(dataptr,tk[ppt->index_tp_delta_b],ppt->has_source_delta_b,storeidx);
           class_store_double(dataptr,tk[ppt->index_tp_delta_cdm],ppt->has_source_delta_cdm,storeidx);
+          class_store_double(dataptr,tk[ppt->index_tp_delta_bc],ppt->has_source_delta_bc,storeidx);
+          class_store_double(dataptr,tk[ppt->index_tp_delta_Tb],ppt->has_source_delta_Tb,storeidx);
           class_store_double(dataptr,tk[ppt->index_tp_delta_idm],ppt->has_source_delta_idm,storeidx);
           class_store_double(dataptr,tk[ppt->index_tp_delta_fld],ppt->has_source_delta_fld,storeidx);
           class_store_double(dataptr,tk[ppt->index_tp_delta_ur],ppt->has_source_delta_ur,storeidx);
@@ -497,6 +499,7 @@ int perturbations_output_data(
           class_store_double(dataptr,tk[ppt->index_tp_theta_g],ppt->has_source_theta_g,storeidx);
           class_store_double(dataptr,tk[ppt->index_tp_theta_b],ppt->has_source_theta_b,storeidx);
           class_store_double(dataptr,tk[ppt->index_tp_theta_cdm],ppt->has_source_theta_cdm,storeidx);
+          class_store_double(dataptr,tk[ppt->index_tp_theta_bc],ppt->has_source_theta_bc,storeidx);
           class_store_double(dataptr,tk[ppt->index_tp_theta_idm],ppt->has_source_theta_idm,storeidx);
           class_store_double(dataptr,tk[ppt->index_tp_theta_fld],ppt->has_source_theta_fld,storeidx);
           class_store_double(dataptr,tk[ppt->index_tp_theta_ur],ppt->has_source_theta_ur,storeidx);
@@ -556,6 +559,8 @@ int perturbations_output_titles(
       class_store_columntitle(titles,"d_g",_TRUE_);
       class_store_columntitle(titles,"d_b",_TRUE_);
       class_store_columntitle(titles,"d_cdm",pba->has_cdm);
+      class_store_columntitle(titles,"d_bc",ppt->has_source_delta_bc);
+      class_store_columntitle(titles,"d_Tb",ppt->has_source_delta_Tb);
       class_store_columntitle(titles,"d_idm",pba->has_idm);
       class_store_columntitle(titles,"d_fld",pba->has_fld);
       class_store_columntitle(titles,"d_ur",pba->has_ur);
@@ -585,6 +590,7 @@ int perturbations_output_titles(
       class_store_columntitle(titles,"t_g",_TRUE_);
       class_store_columntitle(titles,"t_b",_TRUE_);
       class_store_columntitle(titles,"t_cdm",((pba->has_cdm == _TRUE_) && (ppt->gauge != synchronous)));
+      class_store_columntitle(titles,"t_bc",ppt->has_source_theta_bc);
       class_store_columntitle(titles,"t_idm",pba->has_idm);
       class_store_columntitle(titles,"t_fld",pba->has_fld);
       class_store_columntitle(titles,"t_ur",pba->has_ur);
@@ -1182,6 +1188,8 @@ int perturbations_indices(
   ppt->has_source_delta_g = _FALSE_;
   ppt->has_source_delta_b = _FALSE_;
   ppt->has_source_delta_cdm = _FALSE_;
+  ppt->has_source_delta_Tb = _FALSE_;
+  ppt->has_source_delta_bc = _FALSE_;
   ppt->has_source_delta_idm = _FALSE_;
   ppt->has_source_delta_dcdm = _FALSE_;
   ppt->has_source_delta_fld = _FALSE_;
@@ -1197,6 +1205,7 @@ int perturbations_indices(
   ppt->has_source_theta_g = _FALSE_;
   ppt->has_source_theta_b = _FALSE_;
   ppt->has_source_theta_cdm = _FALSE_;
+  ppt->has_source_theta_bc = _FALSE_;
   ppt->has_source_theta_idm = _FALSE_;
   ppt->has_source_theta_dcdm = _FALSE_;
   ppt->has_source_theta_fld = _FALSE_;
@@ -1285,8 +1294,13 @@ int perturbations_indices(
         ppt->has_source_delta_m = _TRUE_;
         ppt->has_source_delta_g = _TRUE_;
         ppt->has_source_delta_b = _TRUE_;
-        if (pba->has_cdm == _TRUE_)
+        if (pba->has_cdm == _TRUE_) {
           ppt->has_source_delta_cdm = _TRUE_;
+          ppt->has_source_delta_bc = _TRUE_;
+        }
+        /* gas temperature perturbation: only evolved by CLASS when perturbed recombination is on */
+        if (ppt->has_perturbed_recombination == _TRUE_)
+          ppt->has_source_delta_Tb = _TRUE_;
         if (pba->has_idm == _TRUE_)
           ppt->has_source_delta_idm = _TRUE_;
         if (pba->has_dcdm == _TRUE_)
@@ -1318,6 +1332,9 @@ int perturbations_indices(
         ppt->has_source_theta_b = _TRUE_;
         if ((pba->has_cdm == _TRUE_) && (ppt->gauge != synchronous))
           ppt->has_source_theta_cdm = _TRUE_;
+        /* relative velocity is gauge invariant; in synchronous gauge theta_cdm = 0 so it is still available */
+        if (pba->has_cdm == _TRUE_)
+          ppt->has_source_theta_bc = _TRUE_;
         if (pba->has_idm == _TRUE_)
           ppt->has_source_theta_idm = _TRUE_;
         if (pba->has_dcdm == _TRUE_)
@@ -1396,6 +1413,8 @@ int perturbations_indices(
       class_define_index(ppt->index_tp_delta_g,    ppt->has_source_delta_g,   index_type,1);
       class_define_index(ppt->index_tp_delta_b,    ppt->has_source_delta_b,   index_type,1);
       class_define_index(ppt->index_tp_delta_cdm,  ppt->has_source_delta_cdm, index_type,1);
+      class_define_index(ppt->index_tp_delta_Tb,   ppt->has_source_delta_Tb,  index_type,1);
+      class_define_index(ppt->index_tp_delta_bc,   ppt->has_source_delta_bc,  index_type,1);
       class_define_index(ppt->index_tp_delta_idm,  ppt->has_source_delta_idm, index_type,1);
       class_define_index(ppt->index_tp_delta_dcdm, ppt->has_source_delta_dcdm,index_type,1);
       class_define_index(ppt->index_tp_delta_fld,  ppt->has_source_delta_fld, index_type,1);
@@ -1410,6 +1429,7 @@ int perturbations_indices(
       class_define_index(ppt->index_tp_theta_g,    ppt->has_source_theta_g,   index_type,1);
       class_define_index(ppt->index_tp_theta_b,    ppt->has_source_theta_b,   index_type,1);
       class_define_index(ppt->index_tp_theta_cdm,  ppt->has_source_theta_cdm, index_type,1);
+      class_define_index(ppt->index_tp_theta_bc,   ppt->has_source_theta_bc,  index_type,1);
       class_define_index(ppt->index_tp_theta_idm,  ppt->has_source_theta_idm, index_type,1);
       class_define_index(ppt->index_tp_theta_dcdm, ppt->has_source_theta_dcdm,index_type,1);
       class_define_index(ppt->index_tp_theta_fld,  ppt->has_source_theta_fld, index_type,1);
@@ -7451,6 +7471,7 @@ int perturbations_sources(
   double * pvecmetric;
 
   double delta_g, delta_rho_scf, rho_plus_p_theta_scf;
+  double delta_Tb;
   double a_prime_over_a=0.;  /* (a'/a) */
   double a_prime_over_a_prime=0.;  /* (a'/a)' */
   double w_fld,dw_over_da_fld,integral_fld;
@@ -7841,6 +7862,25 @@ int perturbations_sources(
         + 3.*a_prime_over_a*theta_over_k2; // N-body gauge correction
     }
 
+    /* baryon-CDM relative density (gauge invariant: the N-body gauge corrections of delta_b and delta_cdm cancel) */
+    if (ppt->has_source_delta_bc == _TRUE_) {
+      _set_source_(ppt->index_tp_delta_bc) = y[ppw->pv->index_pt_delta_b] - y[ppw->pv->index_pt_delta_cdm];
+    }
+
+    /* baryon (gas) temperature perturbation delta T_b / T_b. Outside tight coupling it is the
+       variable evolved with perturbed recombination. During tight coupling the gas is
+       Compton-locked to the photons, so T_b follows the photon temperature: delta T_b/T_b = delta_g/4
+       (for adiabatic modes this equals the delta_b/3 value used at the TCA switch-off). */
+    if (ppt->has_source_delta_Tb == _TRUE_) {
+      if (ppw->approx[ppw->index_ap_tca] == (int)tca_off)
+        delta_Tb = y[ppw->pv->index_pt_perturbed_recombination_delta_temp];
+      else
+        delta_Tb = delta_g/4.;
+      /* N-body gauge correction, -(T_b'/T_b) theta/k^2 with T_b' = -(1+z) aH dT_b/dz */
+      _set_source_(ppt->index_tp_delta_Tb) = delta_Tb
+        + (1.+z)*a_prime_over_a*pvecthermo[pth->index_th_dTb]/pvecthermo[pth->index_th_Tb]*theta_over_k2;
+    }
+
     /* delta_idm */
     if (ppt->has_source_delta_idm == _TRUE_) {
       _set_source_(ppt->index_tp_delta_idm) = y[ppw->pv->index_pt_delta_idm]
@@ -7955,6 +7995,14 @@ int perturbations_sources(
     if (ppt->has_source_theta_cdm == _TRUE_) {
       _set_source_(ppt->index_tp_theta_cdm) = y[ppw->pv->index_pt_theta_cdm]
         + theta_shift; // N-body gauge correction
+    }
+
+    /* baryon-CDM relative velocity divergence theta_b - theta_cdm (gauge invariant; theta_cdm = 0 in synchronous gauge) */
+    if (ppt->has_source_theta_bc == _TRUE_) {
+      if (ppt->gauge == synchronous)
+        _set_source_(ppt->index_tp_theta_bc) = y[ppw->pv->index_pt_theta_b];
+      else
+        _set_source_(ppt->index_tp_theta_bc) = y[ppw->pv->index_pt_theta_b] - y[ppw->pv->index_pt_theta_cdm];
     }
 
     /* theta_idm */
