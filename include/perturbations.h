@@ -243,6 +243,8 @@ struct perturbations
   short has_source_delta_g;    /**< do we need source for delta of gammas? */
   short has_source_delta_b;    /**< do we need source for delta of baryons? */
   short has_source_delta_cdm;  /**< do we need source for delta of cold dark matter? */
+  short has_source_delta_Tb;   /**< do we need source for the baryon (gas) temperature perturbation delta T_b / T_b? (needs perturbed_recombination) */
+  short has_source_delta_bc;   /**< do we need source for the baryon-CDM relative density delta_b - delta_cdm? */
   short has_source_delta_idm;  /**< do we need source for delta of interacting dark matter */
   short has_source_delta_idr;  /**< do we need source for delta of interacting dark radiation? */
   short has_source_delta_dcdm; /**< do we need source for delta of DCDM? */
@@ -257,6 +259,7 @@ struct perturbations
   short has_source_theta_g;    /**< do we need source for theta of gammas? */
   short has_source_theta_b;    /**< do we need source for theta of baryons? */
   short has_source_theta_cdm;  /**< do we need source for theta of cold dark matter? */
+  short has_source_theta_bc;   /**< do we need source for the baryon-CDM relative velocity divergence theta_b - theta_cdm? */
   short has_source_theta_idm;  /**< do we need source for theta of interacting dark matter */
   short has_source_theta_idr;  /**< do we need source for theta of interacting dark radiation? */
   short has_source_theta_dcdm; /**< do we need source for theta of DCDM? */
@@ -291,6 +294,8 @@ struct perturbations
   int index_tp_delta_g;   /**< index value for delta of gammas */
   int index_tp_delta_b;   /**< index value for delta of baryons */
   int index_tp_delta_cdm; /**< index value for delta of cold dark matter */
+  int index_tp_delta_Tb;  /**< index value for baryon temperature perturbation delta T_b / T_b */
+  int index_tp_delta_bc;  /**< index value for baryon-CDM relative density delta_b - delta_cdm */
   int index_tp_delta_idm; /**< index value for delta of interacting dark matter */
   int index_tp_delta_dcdm;/**< index value for delta of DCDM */
   int index_tp_delta_fld;  /**< index value for delta of dark energy */
@@ -308,6 +313,7 @@ struct perturbations
   int index_tp_theta_g;     /**< index value for theta of gammas */
   int index_tp_theta_b;     /**< index value for theta of baryons */
   int index_tp_theta_cdm;   /**< index value for theta of cold dark matter */
+  int index_tp_theta_bc;    /**< index value for baryon-CDM relative velocity divergence theta_b - theta_cdm */
   int index_tp_theta_dcdm;  /**< index value for theta of DCDM */
   int index_tp_theta_fld;   /**< index value for theta of dark energy */
   int index_tp_theta_scf;   /**< index value for theta of scalar field */

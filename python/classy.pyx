@@ -4231,6 +4231,12 @@ cdef class Class:
         if self.pt.has_source_delta_cdm:
             indices.append(self.pt.index_tp_delta_cdm)
             names.append("delta_cdm")
+        if self.pt.has_source_delta_bc:
+            indices.append(self.pt.index_tp_delta_bc)
+            names.append("delta_bc")
+        if self.pt.has_source_delta_Tb:
+            indices.append(self.pt.index_tp_delta_Tb)
+            names.append("delta_Tb")
         if self.pt.has_source_delta_idm:
             indices.append(self.pt.index_tp_delta_idm)
             names.append("delta_idm")
@@ -4274,6 +4280,9 @@ cdef class Class:
         if self.pt.has_source_theta_cdm:
             indices.append(self.pt.index_tp_theta_cdm)
             names.append("theta_cdm")
+        if self.pt.has_source_theta_bc:
+            indices.append(self.pt.index_tp_theta_bc)
+            names.append("theta_bc")
         if self.pt.has_source_theta_idm:
             indices.append(self.pt.index_tp_theta_idm)
             names.append("theta_idm")

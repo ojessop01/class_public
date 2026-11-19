@@ -191,6 +191,8 @@ cdef extern from "class.h":
         short has_source_delta_g
         short has_source_delta_b
         short has_source_delta_cdm
+        short has_source_delta_Tb
+        short has_source_delta_bc
         short has_source_delta_idm
         short has_source_delta_idr
         short has_source_delta_dcdm
@@ -205,6 +207,7 @@ cdef extern from "class.h":
         short has_source_theta_g
         short has_source_theta_b
         short has_source_theta_cdm
+        short has_source_theta_bc
         short has_source_theta_idm
         short has_source_theta_idr
         short has_source_theta_dcdm
@@ -234,6 +237,8 @@ cdef extern from "class.h":
         int index_tp_delta_g
         int index_tp_delta_b
         int index_tp_delta_cdm
+        int index_tp_delta_Tb
+        int index_tp_delta_bc
         int index_tp_delta_idm
         int index_tp_delta_dcdm
         int index_tp_delta_fld
@@ -249,6 +254,7 @@ cdef extern from "class.h":
         int index_tp_theta_g
         int index_tp_theta_b
         int index_tp_theta_cdm
+        int index_tp_theta_bc
         int index_tp_theta_dcdm
         int index_tp_theta_fld
         int index_tp_theta_scf
